@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"io"
-	"log"
 	"net"
 	"time"
 
@@ -159,7 +158,6 @@ func (c *Unbuffered) Post(tag string, v interface{}, options ...Option) (err err
 	if err != nil {
 		return errors.Wrap(err, `failed to serialize payload`)
 	}
-	log.Println(string(serialized))
 
 	var attempt uint64
 WRITE:

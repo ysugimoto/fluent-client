@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
+	fluent "github.com/lestrrat-go/fluent-client"
 	msgpack "github.com/lestrrat-go/msgpack"
 	pdebug "github.com/lestrrat-go/pdebug"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	fluent "github.com/ysugimoto/fluent-client"
 )
 
 // to hell with race-conditions. no locking!
