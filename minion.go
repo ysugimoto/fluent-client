@@ -2,6 +2,7 @@ package fluent
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"sync"
 	"time"
@@ -68,6 +69,7 @@ type minion struct {
 	tagPrefix       string
 	writeThreshold  int
 	writeTimeout    time.Duration
+	tlsConfig       *tls.Config
 }
 
 func newMinion(options ...Option) (*minion, error) {
@@ -117,12 +119,14 @@ func newMinion(options ...Option) (*minion, error) {
 			m.writeThreshold = opt.Value().(int)
 		case optkeyConnectOnStart:
 			connectOnStart = opt.Value().(bool)
+		case optkeyTls:
+			m.tlsConfig = opt.Value().(*tls.Config)
 		}
 	}
 
 	// if requested, connect to the server
 	if connectOnStart {
-		conn, err := dial(context.Background(), m.network, m.address, m.dialTimeout)
+		conn, err := dial(context.Background(), m.network, m.address, m.dialTimeout, m.tlsConfig)
 		if err != nil {
 			return nil, errors.Wrap(err, `failed to connect on start`)
 		}
@@ -226,7 +230,7 @@ func (m *minion) ping(msg *Message) (err error) {
 	if pdebug.Enabled {
 		pdebug.Printf("Connecting to server for ping...")
 	}
-	conn, err := dial(context.Background(), m.network, m.address, m.dialTimeout)
+	conn, err := dial(context.Background(), m.network, m.address, m.dialTimeout, m.tlsConfig)
 	if err != nil {
 		return errors.Wrap(err, `failed to connect server for ping`)
 	}
@@ -533,7 +537,7 @@ func (m *minion) connect(ctx context.Context) net.Conn {
 	defer backoffCancel()
 
 	for {
-		conn, err := dial(ctx, m.network, m.address, m.dialTimeout)
+		conn, err := dial(ctx, m.network, m.address, m.dialTimeout, m.tlsConfig)
 		if err == nil {
 			if pdebug.Enabled {
 				pdebug.Printf("connected to server!")
