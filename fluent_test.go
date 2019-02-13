@@ -694,7 +694,7 @@ func TestPing(t *testing.T) {
 
 				// timing sensitive :/ we need to give the server enough time to receive
 				// the message before canceling it via scancel
-				time.Sleep(100*time.Millisecond)
+				time.Sleep(100 * time.Millisecond)
 				scancel()
 				<-s.Done()
 

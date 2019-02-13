@@ -2,6 +2,7 @@ package fluent
 
 import (
 	"context"
+	"crypto/tls"
 	"time"
 )
 
@@ -202,5 +203,12 @@ func WithPingResultChan(ch chan error) Option {
 	return &option{
 		name:  optkeyPingResultChan,
 		value: ch,
+	}
+}
+
+func WithTLS(tlsConfig *tls.Config) Option {
+	return &option{
+		name:  optkeyTls,
+		value: tlsConfig,
 	}
 }

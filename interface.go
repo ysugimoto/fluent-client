@@ -2,6 +2,7 @@ package fluent
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"sync"
 	"time"
@@ -25,6 +26,7 @@ const (
 	optkeyTimestamp       = "timestamp"
 	optkeyWriteQueueSize  = "write_queue_size"
 	optkeyWriteThreshold  = "write_threshold"
+	optkeyTls             = "tls_connection"
 )
 
 type marshaler interface {
@@ -65,6 +67,7 @@ type Unbuffered struct {
 	subsecond       bool
 	tagPrefix       string
 	writeTimeout    time.Duration
+	tlsConfig       *tls.Config
 }
 
 // Option is an interface used for providing options to the
